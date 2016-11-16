@@ -12,7 +12,8 @@ import GameplayKit
 
 class GameViewController: UIViewController {
 
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
         
         // Load 'GameScene.sks' as a GKScene. This provides gameplay related content
@@ -27,7 +28,9 @@ class GameViewController: UIViewController {
                 sceneNode.graphs = scene.graphs
                 
                 // Set the scale mode to scale to fit the window
-                sceneNode.scaleMode = .aspectFill
+//                sceneNode.scaleMode = .aspectFill
+                sceneNode.scaleMode = .aspectFit
+//                sceneNode.backgroundColor = UIColor(red: 216/255.0, green: 255/255.0, blue: 255/255.0, alpha: 1.0)
                 
                 // Present the scene
                 if let view = self.view as! SKView? {
