@@ -12,14 +12,20 @@ import GameplayKit
 class GameScene: SKScene {
     
     var entities = [GKEntity]()
-    var graphs = [String : GKGraph]()
+    //var graphs = [String : GKGraph]()
     
     private var lastUpdateTime : TimeInterval = 0
-    private var label : SKLabelNode?
+    private var resultLabel : SKLabelNode?
+    
+    var resultApples: [SKSpriteNode] = []
+    
     private var apple : SKSpriteNode?
     private var apple1 : SKSpriteNode?
     private var apple10 : SKSpriteNode?
     private var spinnyNode : SKShapeNode?
+    
+    let appleTree = AppleTree()
+    //let resultLabel = ResultLabel(self)
     
     //var apple: SKSpriteNode?
     
@@ -28,9 +34,11 @@ class GameScene: SKScene {
         self.lastUpdateTime = 0
         
         
+        //resultLabel.updateResultLabel()
+        
         //TODO main setup
-        label = self.childNode(withName: "Result") as? SKLabelNode
-        label?.text = "2"
+        //label = self.childNode(withName: "Result") as? SKLabelNode
+        //label?.text = String(result.iResult)
         
 //        apple1 = self.childNode(withName: "Apple1") as? SKSpriteNode
 //        apple1?.physicsBody?.affectedByGravity = true
@@ -50,6 +58,15 @@ class GameScene: SKScene {
                                               SKAction.fadeOut(withDuration: 0.5),
                                               SKAction.removeFromParent()]))
         }
+    }
+    
+    func updateResultLabel(){
+        resultLabel = self.childNode(withName: "Result") as? SKLabelNode
+        resultLabel?.text = String(appleTree.resultValue)
+    }
+    func clearResultLabel(){
+        resultLabel = self.childNode(withName: "Result") as? SKLabelNode
+        resultLabel?.text = ""
     }
     
     
@@ -107,6 +124,7 @@ class GameScene: SKScene {
                     nodeName == "Left_Apple_9" ||
                     nodeName == "Left_Apple_10"
                 {
+                    appleTree.incrementLeftAppleCount()
                     
                     
                     apple = self.childNode(withName: nodeName) as? SKSpriteNode
@@ -124,6 +142,7 @@ class GameScene: SKScene {
                     nodeName == "Right_Apple_9" ||
                     nodeName == "Right_Apple_10"
                 {
+                    appleTree.incrementRightAppleCount()
                     
                     
                     apple = self.childNode(withName: nodeName) as? SKSpriteNode
@@ -132,6 +151,24 @@ class GameScene: SKScene {
                 }
                 else if  nodeName == "Plus"
                 {
+                    appleTree.plus()
+                    
+                    
+
+                    // Setup leftApples
+//                    for child in self.children {
+//                        if child.name == "Left_Apple" {
+//                            if let child = child as? SKSpriteNode {
+//                                leftApples.append(child)
+//                            }
+//                        }
+//                    }
+                    
+//                    for apple in resultApples {
+//                        apple.position = CGPoint(x: -213, y: 381)
+//                        apple.physicsBody?.affectedByGravity = false
+//                    }
+                    
                     apple = self.childNode(withName: "Left_Apple_1") as? SKSpriteNode
                     apple?.position = CGPoint(x: -213, y: 381)
                     apple?.physicsBody?.affectedByGravity = false
@@ -145,14 +182,32 @@ class GameScene: SKScene {
                     apple?.position = CGPoint(x: -128, y: 495)
                     apple?.physicsBody?.affectedByGravity = false
 
-
+                    //TODO tilføj physbody
+                    //apple = self.childNode(withName: "TopDoor") as? SKSpriteNode
+                    //apple?.position = CGPoint(x: -8, y: 34)
+                    //apple?.addChild(scene!)
                 }
                 else if  nodeName == "Equal"
                 {
                     apple = self.childNode(withName: "TopDoor") as? SKSpriteNode
                     apple?.removeFromParent()
                     
+                    addResultApple()
+                    //addResultApple()
+                    //addResultApple()
                     
+                    
+                    
+                    if let label = self.resultLabel {
+                        label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
+                    }
+                    updateResultLabel()
+                }
+                else if  nodeName == "Clear"
+                {
+                    //TODO reset Apples
+                    appleTree.reset()
+                    clearResultLabel()
                 }
             }
         }
@@ -162,9 +217,9 @@ class GameScene: SKScene {
         //print("nodeAtPoint.name: " + nodeAtPoint.name! )
         //print(nodesAtPoint.count )
         
-        if let label = self.label {
-            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
-        }
+//        if let label = self.resultLabel {
+//            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
+//        }
         
         for t in touches { self.touchDown(atPoint: t.location(in: self)) }
     }
@@ -179,6 +234,38 @@ class GameScene: SKScene {
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches { self.touchUp(atPoint: t.location(in: self)) }
+    }
+    
+    func addResultApple() {
+        // Create sprite
+        
+        
+        let resultApple = SKSpriteNode(imageNamed: "Apple")
+        
+        
+        resultApple.size.height = 40
+        resultApple.size.width = 40
+        resultApple.physicsBody = SKPhysicsBody(circleOfRadius: resultApple.size.width/2) // 1
+        resultApple.physicsBody?.categoryBitMask = 1 // 3
+        resultApple.physicsBody?.collisionBitMask = 4294967295 // 5
+        resultApple.physicsBody?.fieldBitMask = 4294967295
+        resultApple.physicsBody?.contactTestBitMask = 0
+        resultApple.name = "ResultApple"
+        resultApple.physicsBody?.affectedByGravity = true
+        
+        resultApple.physicsBody?.isDynamic = true
+        
+        resultApple.physicsBody?.friction = 0
+        resultApple.physicsBody?.mass = 0.05
+        
+        resultApple.physicsBody?.allowsRotation = true
+                
+        resultApple.position = CGPoint(x: 0, y: -341)
+        
+        resultApple.zPosition = 10
+        
+        // Add the meteor to the scene
+        addChild(resultApple)
     }
     
     

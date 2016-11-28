@@ -17,6 +17,8 @@
 		927CD7DD1DBA5421002BB6F8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 927CD7DB1DBA5421002BB6F8 /* LaunchScreen.storyboard */; };
 		927CD7E81DBA5421002BB6F8 /* AppleCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927CD7E71DBA5421002BB6F8 /* AppleCalculatorTests.swift */; };
 		927CD7F31DBA5421002BB6F8 /* AppleCalculatorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927CD7F21DBA5421002BB6F8 /* AppleCalculatorUITests.swift */; };
+		92F695101DECA9960047B5FD /* GraphicEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F6950F1DECA9960047B5FD /* GraphicEngine.swift */; };
+		92F695121DECA9CA0047B5FD /* CalculatorEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F695111DECA9CA0047B5FD /* CalculatorEngine.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +55,8 @@
 		927CD7EE1DBA5421002BB6F8 /* AppleCalculatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppleCalculatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		927CD7F21DBA5421002BB6F8 /* AppleCalculatorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleCalculatorUITests.swift; sourceTree = "<group>"; };
 		927CD7F41DBA5421002BB6F8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		92F6950F1DECA9960047B5FD /* GraphicEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphicEngine.swift; sourceTree = "<group>"; };
+		92F695111DECA9CA0047B5FD /* CalculatorEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalculatorEngine.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +116,8 @@
 				927CD7D91DBA5421002BB6F8 /* Assets.xcassets */,
 				927CD7DB1DBA5421002BB6F8 /* LaunchScreen.storyboard */,
 				927CD7DE1DBA5421002BB6F8 /* Info.plist */,
+				92F6950F1DECA9960047B5FD /* GraphicEngine.swift */,
+				92F695111DECA9CA0047B5FD /* CalculatorEngine.swift */,
 			);
 			path = AppleCalculator;
 			sourceTree = "<group>";
@@ -274,7 +280,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				927CD7D31DBA5421002BB6F8 /* GameScene.swift in Sources */,
+				92F695121DECA9CA0047B5FD /* CalculatorEngine.swift in Sources */,
 				927CD7D51DBA5421002BB6F8 /* GameViewController.swift in Sources */,
+				92F695101DECA9960047B5FD /* GraphicEngine.swift in Sources */,
 				927CD7CD1DBA5421002BB6F8 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
