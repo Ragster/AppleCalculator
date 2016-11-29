@@ -18,10 +18,13 @@ class GameScene: SKScene {
     private var resultLabel : SKLabelNode?
     
     var resultApples: [SKSpriteNode] = []
+    var operandChoosen = ""
     
+    var topDoor : SKSpriteNode?
     private var apple : SKSpriteNode?
-    private var apple1 : SKSpriteNode?
-    private var apple10 : SKSpriteNode?
+    private var operand : SKSpriteNode?
+    //private var apple1 : SKSpriteNode?
+    //private var apple10 : SKSpriteNode?
     private var spinnyNode : SKShapeNode?
     
     let appleTree = AppleTree()
@@ -33,7 +36,7 @@ class GameScene: SKScene {
 
         self.lastUpdateTime = 0
         
-        
+        clearResultLabel()
         //resultLabel.updateResultLabel()
         
         //TODO main setup
@@ -94,6 +97,91 @@ class GameScene: SKScene {
         }
     }
     
+    func resetApples(){
+        var appleName = ""
+        var appleCounter = 0
+        
+        let leftApplesPosition: [CGPoint] =
+            [CGPoint(x: -265, y: 380),
+             CGPoint(x: -189, y: 380),
+             CGPoint(x: -113, y: 380),
+             CGPoint(x: -265, y: 307),
+             CGPoint(x: -189, y: 307),
+             CGPoint(x: -111, y: 307),
+             CGPoint(x: -265, y: 236),
+             CGPoint(x: -189, y: 235),
+             CGPoint(x: -113, y: 235),
+             CGPoint(x: -113, y: 167)]
+        
+        let rightApplesPosition: [CGPoint] =
+            [CGPoint(x: 76, y: 374),
+             CGPoint(x: 152, y: 374),
+             CGPoint(x: 229, y: 377),
+             CGPoint(x: 77, y: 307),
+             CGPoint(x: 153, y: 307),
+             CGPoint(x: 228, y: 307),
+             CGPoint(x: 76, y: 231),
+             CGPoint(x: 152, y: 234),
+             CGPoint(x: 228, y: 232),
+             CGPoint(x: 229, y: 167)]
+        
+        for leftApple in leftApplesPosition {
+            appleCounter += 1
+            appleName = "Left_Apple_" + String(appleCounter)
+            resetApple(atPoint: leftApple, with: (appleName))
+        }
+        
+        appleCounter = 0
+        for rightApple in rightApplesPosition {
+            appleCounter += 1
+            appleName = "Right_Apple_" + String(appleCounter)
+            resetApple(atPoint: rightApple, with: (appleName))
+        }
+        resetTopDoor()
+    }
+    
+    func resetTopDoor(){
+        topDoor = self.childNode(withName: "TopDoor") as? SKSpriteNode
+        
+        topDoor?.physicsBody?.categoryBitMask = 2
+        topDoor?.physicsBody?.collisionBitMask = 4294967295 // 5
+        topDoor?.physicsBody?.fieldBitMask = 4294967295
+        topDoor?.physicsBody?.contactTestBitMask = 1
+        
+        
+    }
+    
+    func resetApple(atPoint pos: CGPoint, with name: String){
+        apple = self.childNode(withName: name) as? SKSpriteNode
+        apple?.position = pos
+        apple?.physicsBody?.affectedByGravity = false
+        apple?.physicsBody?.allowsRotation = false
+        apple?.physicsBody?.angularVelocity = 0
+        apple?.physicsBody?.isDynamic = false
+    }
+    
+    func showCalculateOperand(withName name: String){
+        operandChoosen = name
+        
+        operand = self.childNode(withName: "OperandPlus") as? SKSpriteNode
+        operand?.zPosition = 10
+        
+        operand = self.childNode(withName: "OperandMinus") as? SKSpriteNode
+        operand?.zPosition = 10
+        
+        operand = self.childNode(withName: "OperandMultiply") as? SKSpriteNode
+        operand?.zPosition = 10
+        
+        operand = self.childNode(withName: "OperandDivide") as? SKSpriteNode
+        operand?.zPosition = 10
+        
+        if(name != ""){
+            operand = self.childNode(withName: name) as? SKSpriteNode
+            operand?.zPosition = 14
+        }
+    }
+    
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 
         let touch = touches.first as UITouch?
@@ -130,6 +218,8 @@ class GameScene: SKScene {
                     apple = self.childNode(withName: nodeName) as? SKSpriteNode
                     apple?.position = CGPoint(x: -230, y: 100)
                     apple?.physicsBody?.affectedByGravity = true
+                    apple?.physicsBody?.allowsRotation = true
+                    apple?.physicsBody?.isDynamic = true
                 }
                 else if  nodeName == "Right_Apple_1" ||
                     nodeName == "Right_Apple_2" ||
@@ -148,66 +238,69 @@ class GameScene: SKScene {
                     apple = self.childNode(withName: nodeName) as? SKSpriteNode
                     apple?.position = CGPoint(x: 230, y: 100)
                     apple?.physicsBody?.affectedByGravity = true
+                    apple?.physicsBody?.allowsRotation = true
+                    apple?.physicsBody?.isDynamic = true
                 }
                 else if  nodeName == "Plus"
                 {
-                    appleTree.plus()
-                    
-                    
-
-                    // Setup leftApples
-//                    for child in self.children {
-//                        if child.name == "Left_Apple" {
-//                            if let child = child as? SKSpriteNode {
-//                                leftApples.append(child)
-//                            }
-//                        }
-//                    }
-                    
-//                    for apple in resultApples {
-//                        apple.position = CGPoint(x: -213, y: 381)
-//                        apple.physicsBody?.affectedByGravity = false
-//                    }
-                    
-                    apple = self.childNode(withName: "Left_Apple_1") as? SKSpriteNode
-                    apple?.position = CGPoint(x: -213, y: 381)
-                    apple?.physicsBody?.affectedByGravity = false
-                    
-                    
-                    apple = self.childNode(withName: "Left_Apple_2") as? SKSpriteNode
-                    apple?.position = CGPoint(x: -106, y: 475)
-                    apple?.physicsBody?.affectedByGravity = false
-                    
-                    apple = self.childNode(withName: "Left_Apple_3") as? SKSpriteNode
-                    apple?.position = CGPoint(x: -128, y: 495)
-                    apple?.physicsBody?.affectedByGravity = false
-
-                    //TODO tilføj physbody
-                    //apple = self.childNode(withName: "TopDoor") as? SKSpriteNode
-                    //apple?.position = CGPoint(x: -8, y: 34)
-                    //apple?.addChild(scene!)
+                    showCalculateOperand(withName: "OperandPlus")
                 }
+                else if  nodeName == "Minus"
+                {
+                    showCalculateOperand(withName: "OperandMinus")
+                }
+                else if  nodeName == "Multiply"
+                {
+                    showCalculateOperand(withName: "OperandMultiply")
+                }
+                else if  nodeName == "Divide"
+                {
+                    showCalculateOperand(withName: "OperandDivide")
+                }
+                
+                    
                 else if  nodeName == "Equal"
                 {
-                    apple = self.childNode(withName: "TopDoor") as? SKSpriteNode
-                    apple?.removeFromParent()
+                    topDoor = self.childNode(withName: "TopDoor") as? SKSpriteNode
+                    topDoor?.physicsBody?.categoryBitMask = 0
+                    topDoor?.physicsBody?.collisionBitMask = 4294967295 // 5
+                    topDoor?.physicsBody?.fieldBitMask = 4294967295
+                    topDoor?.physicsBody?.contactTestBitMask = 0
+                    //apple?.removeFromParent()
                     
-                    addResultApple()
-                    //addResultApple()
-                    //addResultApple()
+//                    addResultApple()
+                    
+                    if(operandChoosen == "OperandPlus")
+                    {
+                        appleTree.plus()
+                    }
+                    else if(operandChoosen == "OperandMinus")
+                    {
+                        appleTree.minus()
+                    }
+                    else if(operandChoosen == "OperandMultiply")
+                    {
+                        appleTree.multiply()
+                    }
+                    else if(operandChoosen == "OperandDivide")
+                    {
+                        appleTree.divide()
+                    }
                     
                     
                     
+                    updateResultLabel()
                     if let label = self.resultLabel {
                         label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
                     }
-                    updateResultLabel()
                 }
                 else if  nodeName == "Clear"
                 {
                     //TODO reset Apples
+                    resetApples()
                     appleTree.reset()
                     clearResultLabel()
+                    showCalculateOperand(withName: "")
                 }
             }
         }
