@@ -9,7 +9,7 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var entities = [GKEntity]()
     //var graphs = [String : GKGraph]()
@@ -23,8 +23,8 @@ class GameScene: SKScene {
     var topDoor : SKSpriteNode?
     private var apple : SKSpriteNode?
     private var operand : SKSpriteNode?
-    //private var apple1 : SKSpriteNode?
-    //private var apple10 : SKSpriteNode?
+    private var label : SKLabelNode?
+    
     private var spinnyNode : SKShapeNode?
     
     let appleTree = AppleTree()
@@ -35,6 +35,8 @@ class GameScene: SKScene {
     override func sceneDidLoad() {
 
         self.lastUpdateTime = 0
+        
+        self.physicsWorld.contactDelegate = self
         
         clearResultLabel()
         //resultLabel.updateResultLabel()
@@ -70,6 +72,12 @@ class GameScene: SKScene {
     func clearResultLabel(){
         resultLabel = self.childNode(withName: "Result") as? SKLabelNode
         resultLabel?.text = ""
+        
+        label = self.childNode(withName: "LeftCounterLabel") as? SKLabelNode
+        label?.text = ""
+        
+        label = self.childNode(withName: "RightCounterLabel") as? SKLabelNode
+        label?.text = ""
     }
     
     
@@ -138,6 +146,11 @@ class GameScene: SKScene {
             resetApple(atPoint: rightApple, with: (appleName))
         }
         resetTopDoor()
+        
+        while self.childNode(withName: "ResultApple") as? SKSpriteNode != nil {
+            apple = self.childNode(withName: "ResultApple") as? SKSpriteNode
+            apple?.removeFromParent()
+        }
     }
     
     func resetTopDoor(){
@@ -214,6 +227,8 @@ class GameScene: SKScene {
                 {
                     appleTree.incrementLeftAppleCount()
                     
+                    label = self.childNode(withName: "LeftCounterLabel") as? SKLabelNode
+                    label?.text = String(format:"%.0f", appleTree.leftAppleCount)
                     
                     apple = self.childNode(withName: nodeName) as? SKSpriteNode
                     apple?.position = CGPoint(x: -230, y: 100)
@@ -234,6 +249,8 @@ class GameScene: SKScene {
                 {
                     appleTree.incrementRightAppleCount()
                     
+                    label = self.childNode(withName: "RightCounterLabel") as? SKLabelNode
+                    label?.text = String(format:"%.0f", appleTree.rightAppleCount)
                     
                     apple = self.childNode(withName: nodeName) as? SKSpriteNode
                     apple?.position = CGPoint(x: 230, y: 100)
@@ -266,9 +283,6 @@ class GameScene: SKScene {
                     topDoor?.physicsBody?.collisionBitMask = 4294967295 // 5
                     topDoor?.physicsBody?.fieldBitMask = 4294967295
                     topDoor?.physicsBody?.contactTestBitMask = 0
-                    //apple?.removeFromParent()
-                    
-//                    addResultApple()
                     
                     if(operandChoosen == "OperandPlus")
                     {
@@ -287,6 +301,12 @@ class GameScene: SKScene {
                         appleTree.divide()
                     }
                     
+                    //TODO tilføj 0.1, 0.2, 0.3 .... 0.9 apple
+                    var i = 0
+                    while i < Int(appleTree.resultValue) {
+                        addResultApple()
+                        i += 1
+                    }
                     
                     
                     updateResultLabel()
@@ -296,11 +316,15 @@ class GameScene: SKScene {
                 }
                 else if  nodeName == "Clear"
                 {
-                    //TODO reset Apples
+                    //TODO reset ResultApples
                     resetApples()
                     appleTree.reset()
                     clearResultLabel()
                     showCalculateOperand(withName: "")
+                    
+                    
+                    
+                    
                 }
             }
         }
@@ -352,8 +376,10 @@ class GameScene: SKScene {
         resultApple.physicsBody?.mass = 0.05
         
         resultApple.physicsBody?.allowsRotation = true
-                
-        resultApple.position = CGPoint(x: 0, y: -341)
+        
+        let randomX:UInt32 = arc4random_uniform(4)
+        
+        resultApple.position = CGPoint(x: (Int(randomX) - 2), y: -341)
         
         resultApple.zPosition = 10
         
@@ -380,4 +406,70 @@ class GameScene: SKScene {
         
         self.lastUpdateTime = currentTime
     }
+    
+    func didBegin(_ contact: SKPhysicsContact) {
+        
+        // 1
+        var firstBody: SKPhysicsBody
+        var secondBody: SKPhysicsBody
+        if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask {
+            firstBody = contact.bodyA
+            secondBody = contact.bodyB
+        } else {
+            firstBody = contact.bodyB
+            secondBody = contact.bodyA
+        }
+        
+        //print(firstBody.node?.name! ?? "test")
+        //print(secondBody.node?.name! ?? "test")
+
+        if(secondBody.node?.name == "resetBasket")
+        {
+            print("Jubii")
+            print(firstBody.node?.name! ?? "test")
+            print(secondBody.node?.name! ?? "test")
+        }
+        
+        
+//        if ((firstBody.categoryBitMask == PhysicsCategory.Meteor ) &&
+//            (secondBody.categoryBitMask == PhysicsCategory.Player ))
+//        {
+//            meteorDidCollideWithPlayer(firstBody.node as! SKSpriteNode, player: secondBody.node as! SKSpriteNode)
+//        }
+//        if ((firstBody.categoryBitMask == PhysicsCategory.Meteor ) &&
+//            (secondBody.categoryBitMask == PhysicsCategory.AsteroidWall ))
+//        {
+//            asteroidDidCollideWithAsteroidWall(secondBody.node as! SKSpriteNode, meteor: firstBody.node as! SKSpriteNode)
+//        }
+//        if ((firstBody.categoryBitMask == PhysicsCategory.Player ) &&
+//            (secondBody.categoryBitMask == PhysicsCategory.BoosterLevel ))
+//        {
+//            print("boosterLevel Colide With Player")
+//            boosterLevelDidCollideWithPlayer(secondBody.node as! SKSpriteNode, player: firstBody.node as! SKSpriteNode)
+//        }
+//        
+        
+        
+    }
+
+    
+//    func didEnd(_ contact: SKPhysicsContact) {
+//        var firstBody: SKPhysicsBody
+//        var secondBody: SKPhysicsBody
+//        if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask {
+//            firstBody = contact.bodyA
+//            secondBody = contact.bodyB
+//        } else {
+//            firstBody = contact.bodyB
+//            secondBody = contact.bodyA
+//        }
+//        print(firstBody)
+//        print(secondBody)
+////        if ((firstBody.categoryBitMask == PhysicsCategory.Meteor ) &&
+////            (secondBody.categoryBitMask == PhysicsCategory.ScoreWall ))
+////        {
+////            asteroidDidCollideWithScoreWall(secondBody.node as! SKSpriteNode, meteor: firstBody.node as! SKSpriteNode)
+////        }
+//        
+//    }
 }

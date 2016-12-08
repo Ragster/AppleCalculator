@@ -33,7 +33,7 @@ class AppleTree {
     }
     
     func divide(){
-        resultValue = leftAppleCount / rightAppleCount
+        resultValue = round(10*(leftAppleCount / rightAppleCount))/10
     }
     
     func reset(){
