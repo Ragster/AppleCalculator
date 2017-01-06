@@ -12,7 +12,6 @@ import GameplayKit
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var entities = [GKEntity]()
-    //var graphs = [String : GKGraph]()
     
     private var lastUpdateTime : TimeInterval = 0
     private var resultLabel : SKLabelNode?
@@ -28,9 +27,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private var spinnyNode : SKShapeNode?
     
     let appleTree = AppleTree()
-    //let resultLabel = ResultLabel(self)
-    
-    //var apple: SKSpriteNode?
     
     override func sceneDidLoad() {
 
@@ -39,17 +35,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.physicsWorld.contactDelegate = self
         
         clearResultLabel()
-        //resultLabel.updateResultLabel()
-        
-        //TODO main setup
-        //label = self.childNode(withName: "Result") as? SKLabelNode
-        //label?.text = String(result.iResult)
-        
-//        apple1 = self.childNode(withName: "Apple1") as? SKSpriteNode
-//        apple1?.physicsBody?.affectedByGravity = true
-//        
-//        apple10 = self.childNode(withName: "Apple10") as? SKSpriteNode
-//        apple10?.physicsBody?.affectedByGravity = true
         
         // Create shape node to use during mouse interaction
         let w = (self.size.width + self.size.height) * 0.05
@@ -109,44 +94,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var appleName = ""
         var appleCounter = 0
         
-        let leftApplesPosition: [CGPoint] =
-            [CGPoint(x: -265, y: 380),
-             CGPoint(x: -189, y: 380),
-             CGPoint(x: -113, y: 380),
-             CGPoint(x: -265, y: 307),
-             CGPoint(x: -189, y: 307),
-             CGPoint(x: -111, y: 307),
-             CGPoint(x: -265, y: 236),
-             CGPoint(x: -189, y: 235),
-             CGPoint(x: -113, y: 235),
-             CGPoint(x: -113, y: 167)]
-        
-        let rightApplesPosition: [CGPoint] =
-            [CGPoint(x: 76, y: 374),
-             CGPoint(x: 152, y: 374),
-             CGPoint(x: 229, y: 377),
-             CGPoint(x: 77, y: 307),
-             CGPoint(x: 153, y: 307),
-             CGPoint(x: 228, y: 307),
-             CGPoint(x: 76, y: 231),
-             CGPoint(x: 152, y: 234),
-             CGPoint(x: 228, y: 232),
-             CGPoint(x: 229, y: 167)]
-        
-        for leftApple in leftApplesPosition {
+        for leftApple in appleTree.leftApplesPosition {
             appleCounter += 1
             appleName = "Left_Apple_" + String(appleCounter)
             resetApple(atPoint: leftApple, with: (appleName))
         }
         
         appleCounter = 0
-        for rightApple in rightApplesPosition {
+        for rightApple in appleTree.rightApplesPosition {
             appleCounter += 1
             appleName = "Right_Apple_" + String(appleCounter)
             resetApple(atPoint: rightApple, with: (appleName))
         }
         resetTopDoor()
         
+        resetResultApples()
+    }
+    
+    func resetResultApples(){
         while self.childNode(withName: "ResultApple") as? SKSpriteNode != nil {
             apple = self.childNode(withName: "ResultApple") as? SKSpriteNode
             apple?.removeFromParent()
@@ -160,8 +125,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         topDoor?.physicsBody?.collisionBitMask = 4294967295 // 5
         topDoor?.physicsBody?.fieldBitMask = 4294967295
         topDoor?.physicsBody?.contactTestBitMask = 1
-        
-        
     }
     
     func resetApple(atPoint pos: CGPoint, with name: String){
@@ -171,6 +134,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         apple?.physicsBody?.allowsRotation = false
         apple?.physicsBody?.angularVelocity = 0
         apple?.physicsBody?.isDynamic = false
+        apple?.zPosition = 10
     }
     
     func showCalculateOperand(withName name: String){
@@ -198,18 +162,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 
         let touch = touches.first as UITouch?
-//        _ = touch!.location(in: self)
-//
+
         let location: CGPoint! = touch!.location(in: scene!)
-//        
-//        let nodeAtPoint = self.atPoint(location)
-//        let nodesAtPoint = self.nodes(at: location)
-//        
-        
-        
-        
-//        let touch = touches.anyObject() as UITouch
-//        let touchLocation = touch.locationInNode(self)
+
         let nodes = self.nodes(at: location) as [SKNode]
         
         for node in nodes {
@@ -225,16 +180,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     nodeName == "Left_Apple_9" ||
                     nodeName == "Left_Apple_10"
                 {
-                    appleTree.incrementLeftAppleCount()
-                    
-                    label = self.childNode(withName: "LeftCounterLabel") as? SKLabelNode
-                    label?.text = String(format:"%.0f", appleTree.leftAppleCount)
-                    
                     apple = self.childNode(withName: nodeName) as? SKSpriteNode
-                    apple?.position = CGPoint(x: -230, y: 100)
-                    apple?.physicsBody?.affectedByGravity = true
-                    apple?.physicsBody?.allowsRotation = true
-                    apple?.physicsBody?.isDynamic = true
+                    if((apple?.position.y)! > CGFloat(166.0))
+                    {
+                    
+                        apple?.position = CGPoint(x: -230, y: 100)
+                        apple?.physicsBody?.affectedByGravity = true
+                        apple?.physicsBody?.allowsRotation = true
+                        apple?.physicsBody?.isDynamic = true
+                    
+                        appleTree.incrementLeftAppleCount()
+                    
+                        label = self.childNode(withName: "LeftCounterLabel") as? SKLabelNode
+                        label?.text = String(format:"%.0f", appleTree.leftAppleCount)
+                    }
                 }
                 else if  nodeName == "Right_Apple_1" ||
                     nodeName == "Right_Apple_2" ||
@@ -247,16 +206,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     nodeName == "Right_Apple_9" ||
                     nodeName == "Right_Apple_10"
                 {
-                    appleTree.incrementRightAppleCount()
-                    
-                    label = self.childNode(withName: "RightCounterLabel") as? SKLabelNode
-                    label?.text = String(format:"%.0f", appleTree.rightAppleCount)
-                    
                     apple = self.childNode(withName: nodeName) as? SKSpriteNode
-                    apple?.position = CGPoint(x: 230, y: 100)
-                    apple?.physicsBody?.affectedByGravity = true
-                    apple?.physicsBody?.allowsRotation = true
-                    apple?.physicsBody?.isDynamic = true
+                    if((apple?.position.y)! > CGFloat(166.0))
+                    {
+                        apple?.position = CGPoint(x: 230, y: 100)
+                        apple?.physicsBody?.affectedByGravity = true
+                        apple?.physicsBody?.allowsRotation = true
+                        apple?.physicsBody?.isDynamic = true
+                    
+                        appleTree.incrementRightAppleCount()
+                    
+                        label = self.childNode(withName: "RightCounterLabel") as? SKLabelNode
+                        label?.text = String(format:"%.0f", appleTree.rightAppleCount)
+                    }
+                    
+                    
                 }
                 else if  nodeName == "Plus"
                 {
@@ -278,93 +242,92 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     
                 else if  nodeName == "Equal"
                 {
-                    topDoor = self.childNode(withName: "TopDoor") as? SKSpriteNode
-                    topDoor?.physicsBody?.categoryBitMask = 0
-                    topDoor?.physicsBody?.collisionBitMask = 4294967295 // 5
-                    topDoor?.physicsBody?.fieldBitMask = 4294967295
-                    topDoor?.physicsBody?.contactTestBitMask = 0
-                    
-                    if(operandChoosen == "OperandPlus")
+                    if(operandChoosen != "")
                     {
-                        appleTree.plus()
-                    }
-                    else if(operandChoosen == "OperandMinus")
-                    {
-                        appleTree.minus()
-                    }
-                    else if(operandChoosen == "OperandMultiply")
-                    {
-                        appleTree.multiply()
-                    }
-                    else if(operandChoosen == "OperandDivide")
-                    {
-                        appleTree.divide()
-                    }
+                        resetResultApples()
                     
-                    //TODO tilføj 0.1, 0.2, 0.3 .... 0.9 apple
-                    var i = 0
-                    while i < Int(appleTree.resultValue) {
-                        addResultApple()
-                        i += 1
+                        topDoor = self.childNode(withName: "TopDoor") as? SKSpriteNode
+                        topDoor?.physicsBody?.categoryBitMask = 0
+                        topDoor?.physicsBody?.collisionBitMask = 4294967295
+                        topDoor?.physicsBody?.fieldBitMask = 4294967295
+                        topDoor?.physicsBody?.contactTestBitMask = 0
+                    
+                        if(operandChoosen == "OperandPlus")
+                        {
+                            appleTree.plus()
+                        }
+                        else if(operandChoosen == "OperandMinus")
+                        {
+                            appleTree.minus()
+                        }
+                        else if(operandChoosen == "OperandMultiply")
+                        {
+                            appleTree.multiply()
+                        }
+                        else if(operandChoosen == "OperandDivide")
+                        {
+                            appleTree.divide()
+                        }
                     }
-                    
-                    
-                    updateResultLabel()
-                    if let label = self.resultLabel {
-                        label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
+                    else
+                    {
+                        //Should i put a text telling to choose operation..?
                     }
                 }
                 else if  nodeName == "Clear"
                 {
-                    //TODO reset ResultApples
                     resetApples()
                     appleTree.reset()
                     clearResultLabel()
                     showCalculateOperand(withName: "")
-                    
-                    
-                    
-                    
-                }
+                 }
             }
         }
-        
-        
-        
-        //print("nodeAtPoint.name: " + nodeAtPoint.name! )
-        //print(nodesAtPoint.count )
-        
-//        if let label = self.resultLabel {
-//            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
-//        }
-        
-        for t in touches { self.touchDown(atPoint: t.location(in: self)) }
-    }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
     }
     
     func addResultApple() {
         // Create sprite
-        
-        
         let resultApple = SKSpriteNode(imageNamed: "Apple")
         
+        if(appleTree.resultValue > 80)
+        {
+            resultApple.size.height = 19
+            resultApple.size.width = 19
+        }
+        else if(appleTree.resultValue > 70)
+        {
+            resultApple.size.height = 22
+            resultApple.size.width = 22
+        }
+        else if(appleTree.resultValue > 60)
+        {
+            resultApple.size.height = 23
+            resultApple.size.width = 23
+        }
+        else if(appleTree.resultValue > 50)
+        {
+            resultApple.size.height = 25
+            resultApple.size.width = 25
+        }
+        else if(appleTree.resultValue > 40)
+        {
+            resultApple.size.height = 27
+            resultApple.size.width = 27
+        }
+        else if(appleTree.resultValue > 30)
+        {
+            resultApple.size.height = 30
+            resultApple.size.width = 30
+        }
+        else
+        {
+            resultApple.size.height = 40
+            resultApple.size.width = 40
+        }
         
-        resultApple.size.height = 40
-        resultApple.size.width = 40
-        resultApple.physicsBody = SKPhysicsBody(circleOfRadius: resultApple.size.width/2) // 1
-        resultApple.physicsBody?.categoryBitMask = 1 // 3
-        resultApple.physicsBody?.collisionBitMask = 4294967295 // 5
+        resultApple.physicsBody = SKPhysicsBody(circleOfRadius: resultApple.size.width/2)
+        resultApple.physicsBody?.categoryBitMask = 1
+        resultApple.physicsBody?.collisionBitMask = 4294967295
         resultApple.physicsBody?.fieldBitMask = 4294967295
         resultApple.physicsBody?.contactTestBitMask = 0
         resultApple.name = "ResultApple"
@@ -383,10 +346,125 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         resultApple.zPosition = 10
         
-        // Add the meteor to the scene
         addChild(resultApple)
     }
     
+    func addResultApple_0_25() {
+        // Create sprite
+        
+        let resultAppleTexture = SKTexture(imageNamed: "Apple_0_25")
+        let resultApple = SKSpriteNode(texture: resultAppleTexture)
+        
+        resultApple.size.height = 20
+        resultApple.size.width = 20
+        
+        resultApple.physicsBody = SKPhysicsBody(texture: resultAppleTexture,
+                      size: CGSize(width: resultApple.size.width,
+                                   height: resultApple.size.height))
+        
+        
+        resultApple.physicsBody?.categoryBitMask = 1
+        resultApple.physicsBody?.collisionBitMask = 4294967295
+        resultApple.physicsBody?.fieldBitMask = 4294967295
+        resultApple.physicsBody?.contactTestBitMask = 0
+        resultApple.name = "ResultApple"
+        resultApple.physicsBody?.affectedByGravity = true
+        
+        resultApple.physicsBody?.isDynamic = true
+        
+        resultApple.physicsBody?.friction = 0
+        resultApple.physicsBody?.mass = 0.05
+        
+        resultApple.physicsBody?.allowsRotation = true
+        
+        resultApple.physicsBody?.angularVelocity = 2
+        
+        let randomX:UInt32 = arc4random_uniform(4)
+        
+        resultApple.position = CGPoint(x: (Int(randomX) - 2), y: -341)
+        
+        resultApple.zPosition = 10
+        
+        addChild(resultApple)
+    }
+    
+    func addResultApple_0_5() {
+        // Create sprite
+        
+        let resultAppleTexture = SKTexture(imageNamed: "Apple_0_5")
+        let resultApple = SKSpriteNode(texture: resultAppleTexture)
+        
+        resultApple.size.height = 20
+        resultApple.size.width = 40
+        
+        resultApple.physicsBody = SKPhysicsBody(texture: resultAppleTexture,
+                                                size: CGSize(width: resultApple.size.width,
+                                                             height: resultApple.size.height))
+        
+        
+        resultApple.physicsBody?.categoryBitMask = 1
+        resultApple.physicsBody?.collisionBitMask = 4294967295
+        resultApple.physicsBody?.fieldBitMask = 4294967295
+        resultApple.physicsBody?.contactTestBitMask = 0
+        resultApple.name = "ResultApple"
+        resultApple.physicsBody?.affectedByGravity = true
+        
+        resultApple.physicsBody?.isDynamic = true
+        
+        resultApple.physicsBody?.friction = 0
+        resultApple.physicsBody?.mass = 0.05
+        
+        resultApple.physicsBody?.allowsRotation = true
+        
+        resultApple.physicsBody?.angularVelocity = 2
+        
+        let randomX:UInt32 = arc4random_uniform(4)
+        
+        resultApple.position = CGPoint(x: (Int(randomX) - 2), y: -341)
+        
+        resultApple.zPosition = 10
+        
+        addChild(resultApple)
+    }
+    
+    func addResultApple_0_75() {
+        // Create sprite
+        
+        let resultAppleTexture = SKTexture(imageNamed: "Apple_0_75")
+        let resultApple = SKSpriteNode(texture: resultAppleTexture)
+        
+        resultApple.size.height = 40
+        resultApple.size.width = 40
+        
+        resultApple.physicsBody = SKPhysicsBody(texture: resultAppleTexture,
+                                                size: CGSize(width: resultApple.size.width,
+                                                             height: resultApple.size.height))
+        
+        
+        resultApple.physicsBody?.categoryBitMask = 1
+        resultApple.physicsBody?.collisionBitMask = 4294967295
+        resultApple.physicsBody?.fieldBitMask = 4294967295
+        resultApple.physicsBody?.contactTestBitMask = 0
+        resultApple.name = "ResultApple"
+        resultApple.physicsBody?.affectedByGravity = true
+        
+        resultApple.physicsBody?.isDynamic = true
+        
+        resultApple.physicsBody?.friction = 0
+        resultApple.physicsBody?.mass = 0.05
+        
+        resultApple.physicsBody?.allowsRotation = true
+        
+        resultApple.physicsBody?.angularVelocity = 2
+        
+        let randomX:UInt32 = arc4random_uniform(4)
+        
+        resultApple.position = CGPoint(x: (Int(randomX) - 2), y: -341)
+        
+        resultApple.zPosition = 10
+        
+        addChild(resultApple)
+    }
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
@@ -408,8 +486,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
-        
-        // 1
+    
         var firstBody: SKPhysicsBody
         var secondBody: SKPhysicsBody
         if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask {
@@ -420,56 +497,101 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             secondBody = contact.bodyA
         }
         
-        //print(firstBody.node?.name! ?? "test")
-        //print(secondBody.node?.name! ?? "test")
-
-        if(secondBody.node?.name == "resetBasket")
+        if(secondBody.node?.name == "resetBasket" || secondBody.node?.name == "TubeRightSide" || secondBody.node?.name == "TubeLeftSide" || secondBody.node?.name == "removeApplePhysic")
         {
-            print("Jubii")
-            print(firstBody.node?.name! ?? "test")
-            print(secondBody.node?.name! ?? "test")
+            
+            if(firstBody.node?.name != "ResultApple")
+            {
+                
+                var myAppleNr = firstBody.node?.name!.components(separatedBy: "_")
+                
+                firstBody.node?.physicsBody?.affectedByGravity = false
+                firstBody.node?.physicsBody?.allowsRotation = false
+                firstBody.node?.physicsBody?.angularVelocity = 1
+                firstBody.node?.physicsBody?.isDynamic = false
+                firstBody.node?.zPosition = 2
+                
+                let actionMove = SKAction.move(to: CGPoint(x: 200, y: (firstBody.node?.position.y.hashValue)!), duration: 1.0)
+                
+                
+                if(myAppleNr?[0] == "Left")
+                {
+                    let actionResetMove = SKAction.move(to: appleTree.leftApplesPosition[Int((myAppleNr?[2])!)! - 1], duration: 1.0)
+                    firstBody.node?.run(SKAction.sequence([actionMove, actionResetMove]))
+                }
+                else if(myAppleNr?[0] == "Right")
+                {
+                    let actionResetMove = SKAction.move(to: appleTree.rightApplesPosition[Int((myAppleNr?[2])!)! - 1], duration: 1.0)
+                    firstBody.node?.run(SKAction.sequence([actionMove, actionResetMove]))
+                }
+                
+                // ++ has been removed in Swift 3.0 so we use += 1
+                appleTree.waitResultCounter += 1
+                
+                if((appleTree.leftAppleCount + appleTree.rightAppleCount) == appleTree.waitResultCounter)
+                {
+                    showResultApples()
+                }
+            }
+        }
+    }
+    
+    func showResultApples()
+    {
+        if(appleTree.resultValue < 1)
+        {
+            //Missing graphic for 0.1 apple to 0.9 so this will do for now :-)
+            if(appleTree.resultValue < 0.5)
+            {
+                self.addResultApple_0_25()
+            }
+            else if(appleTree.resultValue < 0.75)
+            {
+                self.addResultApple_0_5()
+            }
+            else
+            {
+                self.addResultApple_0_75()
+            }
+        }
+        else
+        {
+            self.addResultApple()
+            
+            let decimalResultValue = modf(appleTree.resultValue).1
+            
+            if(decimalResultValue > 0)
+            {
+                if(decimalResultValue < 0.5)
+                {
+                    self.addResultApple_0_25()
+                }
+                else if(decimalResultValue < 0.75)
+                {
+                    self.addResultApple_0_5()
+                }
+                else
+                {
+                    self.addResultApple_0_75()
+                }
+            }
         }
         
         
-//        if ((firstBody.categoryBitMask == PhysicsCategory.Meteor ) &&
-//            (secondBody.categoryBitMask == PhysicsCategory.Player ))
-//        {
-//            meteorDidCollideWithPlayer(firstBody.node as! SKSpriteNode, player: secondBody.node as! SKSpriteNode)
-//        }
-//        if ((firstBody.categoryBitMask == PhysicsCategory.Meteor ) &&
-//            (secondBody.categoryBitMask == PhysicsCategory.AsteroidWall ))
-//        {
-//            asteroidDidCollideWithAsteroidWall(secondBody.node as! SKSpriteNode, meteor: firstBody.node as! SKSpriteNode)
-//        }
-//        if ((firstBody.categoryBitMask == PhysicsCategory.Player ) &&
-//            (secondBody.categoryBitMask == PhysicsCategory.BoosterLevel ))
-//        {
-//            print("boosterLevel Colide With Player")
-//            boosterLevelDidCollideWithPlayer(secondBody.node as! SKSpriteNode, player: firstBody.node as! SKSpriteNode)
-//        }
-//        
         
         
+        apple = self.childNode(withName: "ResultApple") as? SKSpriteNode
+        
+        let delay = SKAction.wait(forDuration: 0.1)
+        let a = SKAction.run({ self.addResultApple() })
+        
+        let sekvens = SKAction.sequence([delay, a])
+        
+        apple?.run(SKAction.repeat(sekvens, count: Int(appleTree.resultValue - 1)))
+        
+        updateResultLabel()
+        if let label = self.resultLabel {
+            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
+        }
     }
-
-    
-//    func didEnd(_ contact: SKPhysicsContact) {
-//        var firstBody: SKPhysicsBody
-//        var secondBody: SKPhysicsBody
-//        if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask {
-//            firstBody = contact.bodyA
-//            secondBody = contact.bodyB
-//        } else {
-//            firstBody = contact.bodyB
-//            secondBody = contact.bodyA
-//        }
-//        print(firstBody)
-//        print(secondBody)
-////        if ((firstBody.categoryBitMask == PhysicsCategory.Meteor ) &&
-////            (secondBody.categoryBitMask == PhysicsCategory.ScoreWall ))
-////        {
-////            asteroidDidCollideWithScoreWall(secondBody.node as! SKSpriteNode, meteor: firstBody.node as! SKSpriteNode)
-////        }
-//        
-//    }
 }

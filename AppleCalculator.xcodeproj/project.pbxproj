@@ -17,7 +17,6 @@
 		927CD7DD1DBA5421002BB6F8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 927CD7DB1DBA5421002BB6F8 /* LaunchScreen.storyboard */; };
 		927CD7E81DBA5421002BB6F8 /* AppleCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927CD7E71DBA5421002BB6F8 /* AppleCalculatorTests.swift */; };
 		927CD7F31DBA5421002BB6F8 /* AppleCalculatorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927CD7F21DBA5421002BB6F8 /* AppleCalculatorUITests.swift */; };
-		92F695101DECA9960047B5FD /* GraphicEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F6950F1DECA9960047B5FD /* GraphicEngine.swift */; };
 		92F695121DECA9CA0047B5FD /* CalculatorEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F695111DECA9CA0047B5FD /* CalculatorEngine.swift */; };
 /* End PBXBuildFile section */
 
@@ -55,7 +54,6 @@
 		927CD7EE1DBA5421002BB6F8 /* AppleCalculatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppleCalculatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		927CD7F21DBA5421002BB6F8 /* AppleCalculatorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleCalculatorUITests.swift; sourceTree = "<group>"; };
 		927CD7F41DBA5421002BB6F8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		92F6950F1DECA9960047B5FD /* GraphicEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphicEngine.swift; sourceTree = "<group>"; };
 		92F695111DECA9CA0047B5FD /* CalculatorEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalculatorEngine.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -116,7 +114,6 @@
 				927CD7D91DBA5421002BB6F8 /* Assets.xcassets */,
 				927CD7DB1DBA5421002BB6F8 /* LaunchScreen.storyboard */,
 				927CD7DE1DBA5421002BB6F8 /* Info.plist */,
-				92F6950F1DECA9960047B5FD /* GraphicEngine.swift */,
 				92F695111DECA9CA0047B5FD /* CalculatorEngine.swift */,
 			);
 			path = AppleCalculator;
@@ -282,7 +279,6 @@
 				927CD7D31DBA5421002BB6F8 /* GameScene.swift in Sources */,
 				92F695121DECA9CA0047B5FD /* CalculatorEngine.swift in Sources */,
 				927CD7D51DBA5421002BB6F8 /* GameViewController.swift in Sources */,
-				92F695101DECA9960047B5FD /* GraphicEngine.swift in Sources */,
 				927CD7CD1DBA5421002BB6F8 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -416,6 +412,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -438,6 +435,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = B3NSK9BL6H;
+				ENABLE_TESTABILITY = YES;
 				INFOPLIST_FILE = AppleCalculator/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -453,6 +451,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = B3NSK9BL6H;
+				ENABLE_TESTABILITY = NO;
 				INFOPLIST_FILE = AppleCalculator/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -469,6 +468,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = B3NSK9BL6H;
+				ENABLE_TESTABILITY = YES;
 				INFOPLIST_FILE = AppleCalculatorTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = net.gulbaek.AppleCalculatorTests;
@@ -484,6 +484,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = B3NSK9BL6H;
+				ENABLE_TESTABILITY = NO;
 				INFOPLIST_FILE = AppleCalculatorTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = net.gulbaek.AppleCalculatorTests;

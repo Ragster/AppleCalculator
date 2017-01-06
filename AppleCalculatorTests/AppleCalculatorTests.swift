@@ -11,8 +11,18 @@ import XCTest
 
 class AppleCalculatorTests: XCTestCase {
     
+    let appleTree = AppleTree()
+    
     override func setUp() {
         super.setUp()
+        
+        appleTree.reset()
+        
+        for _ in 0..<10
+        {
+            self.appleTree.incrementLeftAppleCount()
+            self.appleTree.incrementRightAppleCount()
+        }
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
     
@@ -20,16 +30,45 @@ class AppleCalculatorTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
-    
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+
+    func testPlus() {
+        self.appleTree.plus()
+        
+        XCTAssert(self.appleTree.resultValue == 20)
     }
+    
+    func testMinus() {
+        self.appleTree.minus()
+        
+        XCTAssert(self.appleTree.resultValue == 0)
+    }
+    
+    func testMultiply() {
+        self.appleTree.multiply()
+        
+        XCTAssert(self.appleTree.resultValue == 100)
+    }
+    
+    func testDivide() {
+        self.appleTree.divide()
+        
+        XCTAssert(self.appleTree.resultValue == 1)
+    }
+    
+
     
     func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measure {
-            // Put the code you want to measure the time of here.
+
+            for _ in 0..<10000
+            {
+                self.testPlus()
+                self.testMinus()
+                self.testMultiply()
+                self.testDivide()
+            }
+
         }
     }
     
