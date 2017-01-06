@@ -30,7 +30,9 @@ class GameViewController: UIViewController {
                 // Set the scale mode to scale to fit the window
 //                sceneNode.scaleMode = .aspectFill
                 sceneNode.scaleMode = .aspectFit
-//                sceneNode.backgroundColor = UIColor(red: 216/255.0, green: 255/255.0, blue: 255/255.0, alpha: 1.0)
+                
+                
+                //sceneNode.backgroundColor = UIColor(red: 216/255.0, green: 255/255.0, blue: 255/255.0, alpha: 1.0)
                 
                 // Present the scene
                 if let view = self.view as! SKView? {
@@ -38,9 +40,9 @@ class GameViewController: UIViewController {
                     
                     view.ignoresSiblingOrder = true
                     
-                    view.showsFPS = true
-                    view.showsNodeCount = true
-                    //view.showsPhysics = true
+                    view.showsFPS = false
+                    view.showsNodeCount = false
+                    view.showsPhysics = false
                 }
             }
         }
