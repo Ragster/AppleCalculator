@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9206CF5F1E25708600534E60 /* Readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9206CF5E1E25708600534E60 /* Readme.txt */; };
 		927CD7CD1DBA5421002BB6F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927CD7CC1DBA5421002BB6F8 /* AppDelegate.swift */; };
 		927CD7CF1DBA5421002BB6F8 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 927CD7CE1DBA5421002BB6F8 /* GameScene.sks */; };
 		927CD7D11DBA5421002BB6F8 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 927CD7D01DBA5421002BB6F8 /* Actions.sks */; };
@@ -38,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9206CF5E1E25708600534E60 /* Readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Readme.txt; sourceTree = "<group>"; };
 		927CD7C91DBA5421002BB6F8 /* AppleCalculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppleCalculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		927CD7CC1DBA5421002BB6F8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		927CD7CE1DBA5421002BB6F8 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 		927CD7C01DBA5420002BB6F8 = {
 			isa = PBXGroup;
 			children = (
+				9206CF5E1E25708600534E60 /* Readme.txt */,
 				927CD7CB1DBA5421002BB6F8 /* AppleCalculator */,
 				927CD7E61DBA5421002BB6F8 /* AppleCalculatorTests */,
 				927CD7F11DBA5421002BB6F8 /* AppleCalculatorUITests */,
@@ -247,6 +250,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9206CF5F1E25708600534E60 /* Readme.txt in Resources */,
 				927CD7D81DBA5421002BB6F8 /* Main.storyboard in Resources */,
 				927CD7CF1DBA5421002BB6F8 /* GameScene.sks in Resources */,
 				927CD7DA1DBA5421002BB6F8 /* Assets.xcassets in Resources */,
